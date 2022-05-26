@@ -1,0 +1,72 @@
+@import "../../../../styles/colors.scss";
+
+.form__inputs {
+   display: flex;
+   flex-direction: column;
+   gap: 50px;
+   &:not(:last-child) {
+      margin-bottom: 43px;
+   }
+}
+
+.line-input {
+   min-height: 54px;
+   position: relative;
+   &__label {
+      font-size: 16px;
+      color: $gray;
+      z-index: 2;
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      padding: 0px 4px;
+      transform: translate(0px, -50%);
+      transition: all 0.3s ease 0s;
+   }
+   &__input {
+      z-index: 1;
+      min-height: 54px;
+      width: 100%;
+      padding: 14px 16px;
+      background-color: $mainBg;
+      border: 1px solid $border;
+      border-radius: 4px;
+      color: $black;
+      transition: border 0.3s ease 0s;
+      &:focus + .line-input__label {
+         font-size: 12px;
+         top: 0;
+         background-color: $mainBg;
+      }
+   }
+
+
+   
+
+   &__error {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transform: translate(0px, 100%);
+      font-size: 12px;
+      line-height: 14px;
+      padding: 4px 0px 0px 16px;
+      color: $error;
+      transition: all 0.3s ease 0s;
+   }
+   .line-input__dirty ~ .line-input__label {
+      font-size: 12px;
+      top: 0;
+      background-color: $mainBg;
+      background-color: $mainBg;
+   }
+   &__error ~ .line-input__label {
+      color: $error;
+      font-size: 12px;
+      top: 0;
+      background-color: $mainBg;
+   }
+   &__error ~ &__input {
+      border: 2px solid $error;
+   }
+}

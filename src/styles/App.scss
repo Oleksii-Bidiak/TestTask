@@ -1,0 +1,114 @@
+// Підключення шрифта
+@import url("https://fonts.googleapis.com/css?family=Nunito:regular");
+
+@import "./colors.scss";
+@import "./tippy.scss";
+// Обнулення стилів браузера
+* {
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+}
+*,
+*:before,
+*:after {
+	box-sizing: border-box;
+}
+:focus,
+:active {
+	outline: none;
+}
+a:focus,
+a:active {
+	outline: none;
+}
+html,
+body {
+	height: 100%;
+	font-family: Nunito;
+	min-width: 360px;
+}
+body {
+	color: #000;
+	line-height: 1;
+	font-size: 14px;
+	//text-rendering: optimizeLegibility;
+	-ms-text-size-adjust: 100%;
+	-moz-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+input,
+button,
+textarea {
+	font-family: Nunito;
+	font-size: inherit;
+}
+button {
+	cursor: pointer;
+	color: inherit;
+	background-color: inherit;
+}
+a {
+	color: inherit;
+}
+a:link,
+a:visited {
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: none;
+}
+ul li {
+	list-style: none;
+}
+img {
+	vertical-align: top;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: inherit;
+	font-size: inherit;
+}
+
+#root {
+	background: #f8f8f8;
+	min-height: 100%;
+	padding: 60px 0px 100px 0px;
+}
+
+// Запобігання зміни кольору заднього фону для input при автозаповненні в Chrome
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	-webkit-box-shadow: 0 0 0 30px $mainBg inset !important;
+}
+
+// Стилі для вього додатку
+.app {
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	// Прижимаем footer
+	> main {
+		flex: 1 1 auto;
+	}
+
+	&__body {
+	}
+}
+
+// Загаьний стиль для контейнера
+[class*="__container"] {
+	max-width: 1170px;
+	box-sizing: content-box;
+	margin: 0 auto;
+	padding: 0px 16px;
+}
