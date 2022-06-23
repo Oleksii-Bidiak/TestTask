@@ -8,7 +8,7 @@ import { useFetching } from '../../../hooks/useFetching.js'
 
 import './users.scss'
 
-const Users = ({ formSent }) => {
+const Users = ({ formSent, setFormSent }) => {
 
    const [users, setUsers] = useState([])
    const [nextPage, setNextPage] = useState(false);
@@ -38,7 +38,9 @@ const Users = ({ formSent }) => {
    }, [page, formSent]);
 
    const nextUsers = () => {
+      setFormSent(false)
       setPage(page + 1)
+
    }
 
    return (
