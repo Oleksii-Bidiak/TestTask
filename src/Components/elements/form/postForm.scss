@@ -1,6 +1,21 @@
+@import "../../../styles/colors.scss";
+
 .form {
    display: flex;
    flex-direction: column;
+
+   &__button {
+      &:not(:last-child) {
+         margin-bottom: 50px;
+      }
+   }
+
+   &__error {
+      text-align: center;
+      line-height: 14px;
+      color: $error;
+      font-size: 12px;
+   }
 }
 
 .registered {

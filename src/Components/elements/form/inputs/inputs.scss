@@ -50,8 +50,8 @@
       transform: translate(0px, 100%);
       font-size: 12px;
       line-height: 14px;
-      padding: 4px 0px 0px 16px;
       color: $error;
+      padding: 4px 0px 0px 16px;
       transition: all 0.3s ease 0s;
    }
    .line-input__dirty ~ .line-input__label {

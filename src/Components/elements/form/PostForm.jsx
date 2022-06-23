@@ -11,7 +11,7 @@ import UploadImage from './uploadImage/UploadImage'
 import Title from '../title/Title'
 import success from '../../../Assets/success-image.svg'
 
-const PostForm = ({ nameClass }) => {
+const PostForm = ({ nameClass, formSent, setFormSent }) => {
    const [options, setOptions] = useState([])
 
    const [name, setName] = useState('');
@@ -29,12 +29,13 @@ const PostForm = ({ nameClass }) => {
    const [position, setPosition] = useState(0);
    const [positionError, setPositionError] = useState('Оберіть позицію');
 
-   // const [image, setImage] = useState('');
-   // const [imageDirty, setImageDirty] = useState(false);
-   // const [imageError, setImageError] = useState('The photo format must be jpeg/jpg type');
+   const [image, setImage] = useState('');
+   const [imageDirty, setImageDirty] = useState(false);
+   const [imageError, setImageError] = useState('The photo format must be jpeg/jpg type');
+
 
    const [formValid, setFormValid] = useState(false);
-   const [formSent, setFormSent] = useState(false);
+   const [formSentError, setFormSentError] = useState('');
 
    const [fetchPositions, isLoading, usersError] = useFetching(async () => {
       const positions = await UsersService.getPositions();
@@ -46,27 +47,31 @@ const PostForm = ({ nameClass }) => {
    }, [])
 
    useEffect(() => {
-      if (nameError || emailError || phoneError || positionError) {
+      if (nameError || emailError || phoneError || positionError || imageError) {
          setFormValid(false)
       } else {
          setFormValid(true)
       }
-   }, [nameError, emailError, phoneError, positionError]);
+   }, [nameError, emailError, phoneError, positionError, imageError]);
 
    const blurHandler = (e) => {
       switch (e.target.name) {
          case 'name':
             setNameDirty(true)
+            setFormSent(false)
             break
          case 'email':
             setEmailDirty(true)
+            setFormSent(false)
             break
          case 'phone':
             setPhoneDirty(true)
+            setFormSent(false)
             break
-         // case 'image':
-         //    setImageDirty(true)
-         //    break
+         case 'image':
+            setImageDirty(true)
+            setFormSent(false)
+            break
       }
    }
 
@@ -90,7 +95,6 @@ const PostForm = ({ nameClass }) => {
                setEmailError('Некоректний email')
             } else {
                setEmailError('')
-               // setImageDirty(false)
             }
             break
          case 'phone':
@@ -102,17 +106,28 @@ const PostForm = ({ nameClass }) => {
                setPhoneError('')
             }
             break
-         // case 'image':
-         //    const file = e.target
-         //    if (!['jpeg', 'jpg'].includes(file.type)) {
-         //       setImageError('Невірний формат файлу (лише jpeg/jpg)')
-         //    } else if (file.size > 5 * 1024 * 1024) {
-         //       setImageError('Файл повинен бути менше 5Мб')
-         //    } else {
-         //       console.log('ok')
-         //       setImageError('')
-         //    }
-         //    break
+         case 'image':
+            const file = e.target.files[0]
+            console.log(file)
+            if (!['image/jpeg', 'image/jpg'].includes(file.type)) {
+               setImageError('Невірний формат файлу (лише jpeg/jpg)')
+            } else if (file.size > 5 * 1024 * 1024) {
+               setImageError('Файл повинен бути менше 5Мб')
+            } else {
+               console.log('ok')
+               if (!file) return; // else it will throw an parse error        
+               const url = URL.createObjectURL(file);
+               setImage(url)
+
+               // const imagePreview = document.querySelectorAll('.file-form__preview>span>img')
+               // console.log(imagePreview)
+               // if (imagePreview.offsetHeight >= 70 && imagePreview.offsetWidth >= 70) {
+               //    setImageError('')
+               // } else {
+               //    setImageError('Зображення має бути не меншим, ніж 70х70 px')
+               // }
+            }
+            break
       }
    }
 
@@ -133,12 +148,18 @@ const PostForm = ({ nameClass }) => {
       formData.append('photo', fileField.files[0]);
 
       const token = await UsersService.getToken()
-      console.log(token)
-      console.log(formData)
+
       fetch('https://frontend-test-assignment-api.abz.agency/api/v1/users', { method: 'POST', body: formData, headers: { 'Token': token, }, }).then(function (response) { return response.json(); }).then(function (data) {
-         console.log(data); if (data.success) {
+         console.log(data);
+         if (data.success) {
+            setFormSentError('')
             setFormSent(true)
-         } else { // proccess server errors 
+            setName('')
+            setEmail('')
+            setPhone('')
+            setImage('')
+         } else {
+            setFormSentError(data.message)
          }
       }).catch(function (error) { // proccess network errors 
       });
@@ -161,10 +182,15 @@ const PostForm = ({ nameClass }) => {
                ? <Loader />
                : <Points optionHandler={optionHandler} options={options} />
          }
-         <UploadImage />
+         <UploadImage
+            value={[image, imageDirty, imageError]}
+            blurHandler={blurHandler}
+            handler={handler}
+         />
          <Button
             disabled={!formValid}
             onClick={(e) => submit(e)}
+            nameClass='form__button'
          >
             Sign up
          </Button>
@@ -172,7 +198,12 @@ const PostForm = ({ nameClass }) => {
             <div className='registered'>
                <Title nameClass={'registered__title'}>User successfully registered</Title>
                <img src={success} alt="success" />
-            </div>}
+            </div>
+         }
+         {formSentError !== ''
+            ? <div className="form__error">{formSentError}</div>
+            : ''
+         }
       </form >
    )
 }

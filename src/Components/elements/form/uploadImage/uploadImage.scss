@@ -4,6 +4,7 @@
    &:not(:last-child) {
       margin-bottom: 50px;
    }
+   position: relative;
 }
 .file-form {
    display: flex;
@@ -34,11 +35,19 @@
       border-radius: 0px 4px 4px 0px;
       border: 1px solid $border;
       border-left: none;
-      min-height: 54px;
+      height: 54px;
       padding: 0px 16px;
       width: 100%;
       display: flex;
       align-items: center;
       color: $gray;
+      position: relative;
+      overflow: hidden;
+      img {
+         opacity: 0;
+         visibility: hidden;
+         position: absolute;
+         top: 0;left: 0;
+      }
    }
 }

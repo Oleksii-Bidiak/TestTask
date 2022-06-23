@@ -8,7 +8,7 @@ import { useFetching } from '../../../hooks/useFetching.js'
 
 import './users.scss'
 
-const Users = () => {
+const Users = ({ formSent }) => {
 
    const [users, setUsers] = useState([])
    const [nextPage, setNextPage] = useState(false);
@@ -16,16 +16,26 @@ const Users = () => {
    const [limit, setLimit] = useState(6);
 
    const [fetchUsers, isLoading, usersError] = useFetching(async () => {
-      const response = await UsersService.getUsers(page);
-      setUsers([...users, ...response.data.users])
-      if (response.data.links.next_url) {
-         setNextPage(true)
-      } else { setNextPage(false) }
+
+      if (formSent && page === 1) {
+         const response = await UsersService.getUsers(page);
+         setUsers([...response.data.users])
+      } else if (formSent) {
+         setPage(1)
+      }
+
+      if (!formSent) {
+         const response = await UsersService.getUsers(page);
+         setUsers([...users, ...response.data.users])
+         if (response.data.links.next_url) {
+            setNextPage(true)
+         } else { setNextPage(false) }
+      }
    })
 
    useEffect(() => {
       fetchUsers()
-   }, [page]);
+   }, [page, formSent]);
 
    const nextUsers = () => {
       setPage(page + 1)
@@ -42,16 +52,13 @@ const Users = () => {
                      : <UsersList users={users} />
                }
                {
-                  nextPage
-                     ?
-                     <Button
-                        nameClass={'users__button'}
-                        onClick={nextUsers}
-                     >
-                        Show more
-                     </Button>
-                     :
-                     <></>
+                  nextPage &&
+                  <Button
+                     nameClass={'users__button'}
+                     onClick={nextUsers}
+                  >
+                     Show more
+                  </Button>
                }
             </div>
          </div>
