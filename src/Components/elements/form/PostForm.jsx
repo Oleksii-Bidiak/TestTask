@@ -118,7 +118,7 @@ const PostForm = ({ nameClass, formSent, setFormSent }) => {
                if (!file) return; // else it will throw an parse error        
                const url = URL.createObjectURL(file);
                setImage(url)
-
+               setImageError('')
                // const imagePreview = document.querySelectorAll('.file-form__preview>span>img')
                // console.log(imagePreview)
                // if (imagePreview.offsetHeight >= 70 && imagePreview.offsetWidth >= 70) {
